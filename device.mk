@@ -88,7 +88,7 @@ PRODUCT_SOONG_NAMESPACES += \
 
 # TWRP Configuration
 TW_THEME := portrait_hdpi
-TW_DEVICE_VERSION :=4 BY SIDDK
+TW_DEVICE_VERSION := BY SIDDK
 RECOVERY_SDCARD_ON_DATA := true
 TARGET_RECOVERY_QCOM_RTC_FIX := true
 TW_EXCLUDE_DEFAULT_USB_INIT := true
@@ -108,6 +108,7 @@ TW_EXCLUDE_APEX := true
 TW_INCLUDE_FASTBOOTD := true
 #TW_PREPARE_DATA_MEDIA_EARLY := true
 TW_NO_EXFAT_FUSE := true
+TW_DELAY_TOUCH_INIT_MS := 1000
 
 # Crypto
 TW_INCLUDE_CRYPTO := true
@@ -129,3 +130,9 @@ RECOVERY_LIBRARY_SOURCE_FILES += \
 PRODUCT_PACKAGES += \
     qcom_decrypt \
     qcom_decrypt_fbe
+
+# Vendor_boot
+$(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota/launch_with_vendor_ramdisk.mk)
+
+PRODUCT_PACKAGES += \
+    fstab.default.vendor_ramdisk
