@@ -64,6 +64,7 @@ jobs:
         git clone -b ${{ env.DEVICE_TREE_BRANCH }} ${{ env.DEVICE_TREE_URL }} ${{ env.DEVICE_PATH }}
 
     - name: 🚀 编译！
+      shell: bash 
       run: |
         cd workspace
         source build/envsetup.sh
@@ -71,7 +72,7 @@ jobs:
         lunch ${{ env.MAKEFILE_NAME }}-eng
         mka ${{ env.BUILD_TARGET }} -j$(nproc --all)
 
-    - name: 📤 提取并上传 (修正真实物理产物名称)
+    - name: 📤 提取并上传 
       uses: actions/upload-artifact@v4
       with:
         name: TWRP-Recovery-Nabu
