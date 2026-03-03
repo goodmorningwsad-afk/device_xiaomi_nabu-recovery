@@ -33,7 +33,7 @@ jobs:
     - name: ⏰ 检出代码
       uses: actions/checkout@v4
 
-    - name: ⚙️ 配置极客编译环境 (融合 action 5 级依赖与 Python 2 劫持)
+    - name: ⚙️ 配置编译环境 
       run: |
         export DEBIAN_FRONTEND=noninteractive
         export TZ=Etc/UTC
