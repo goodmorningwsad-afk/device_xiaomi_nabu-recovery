@@ -93,5 +93,8 @@ jobs:
     - name: 📤 提取并上传 
       uses: actions/upload-artifact@v4
       with:
-        name: TWRP-Recovery-Nabu
-        path: workspace/out/target/product/${{ env.DEVICE_NAME }}/boot.img
+        name: TWRP-Recovery-Nabu-Full
+        # 🚨 物理劫持：用通配符把 boot.img 和纯净的 ramdisk 全部打包下载！
+        path: |
+          workspace/out/target/product/${{ env.DEVICE_NAME }}/boot.img
+          workspace/out/target/product/${{ env.DEVICE_NAME }}/ramdisk-recovery.*
