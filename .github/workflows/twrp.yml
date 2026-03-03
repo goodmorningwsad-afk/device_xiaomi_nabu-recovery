@@ -63,6 +63,20 @@ jobs:
         cd workspace
         git clone -b ${{ env.DEVICE_TREE_BRANCH }} ${{ env.DEVICE_TREE_URL }} ${{ env.DEVICE_PATH }}
 
+    - name: 📦 注入内核源码 (修复 generated_kernel_includes 报错)
+      run: |
+        cd workspace
+        echo "==== 正在填补内核空洞 ===="
+        # 根据你之前的配置，把 Nabu 的内核源码强行克隆到指定路径
+        git clone --depth=1 https://github.com/goodmorningwsad-afk/kernel_xiaomi_nabu-ki.git -b derp15.1 kernel/xiaomi/nabu
+
+    - name: ⚡ 挂载 ccache 编译缓存加速引擎
+      uses: hendrikmuhs/ccache-action@v1.2
+      with:
+        max-size: "5G"
+        key: twrp-ccache-${{ runner.os }}-${{ github.sha }}
+        restore-keys: twrp-ccache-${{ runner.os }}-
+
     - name: 🚀 编译！
       shell: bash 
       run: |
