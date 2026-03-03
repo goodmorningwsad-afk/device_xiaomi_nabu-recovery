@@ -62,4 +62,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: TWRP-Recovery-Nabu
-        path: workspace/out/target/product/${{ env.DEVICE_NAME }}/${{ env.BUILD_TARGET }}.img
+        path: workspace/out/target/product/${{ env.DEVICE_NAME }}/boot.img
