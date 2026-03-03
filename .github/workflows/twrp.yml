@@ -81,6 +81,13 @@ jobs:
       shell: bash 
       run: |
         cd workspace
+        
+        # 🚨 借鉴 Action 7 的强制介入思想：物理激活 AOSP 构建系统的缓存大动脉
+        export USE_CCACHE=1
+        export CCACHE_EXEC=/usr/bin/ccache
+        ccache -M 50G
+        
+        # 以下为你原有的标准编译流程，一字未改
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
         lunch ${{ env.MAKEFILE_NAME }}-eng
