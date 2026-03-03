@@ -33,15 +33,22 @@ jobs:
     - name: ⏰ 检出代码
       uses: actions/checkout@v4
 
-    - name: ⚙️ 配置极客编译环境 (粉碎 tzdata 交互卡点)
+    - name: ⚙️ 配置极客编译环境 (融合 action 5 级依赖与 Python 2 劫持)
       run: |
-        # 🚨 物理降维打击：声明非交互模式，强行设定默认时区为 UTC，彻底干掉弹窗！
         export DEBIAN_FRONTEND=noninteractive
         export TZ=Etc/UTC
-        
-        apt-get update
-        apt-get install -y git-core gnupg flex bison build-essential zip curl zlib1g-dev gcc-multilib g++-multilib libc6-dev-i386 lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z1-dev libgl1-mesa-dev libxml2-utils xsltproc unzip jq bc ccache sudo
 
+        apt-get update
+        
+        apt-get install -y git ccache automake flex lzop bison gperf build-essential zip curl zlib1g-dev g++-multilib libxml2-utils bzip2 libbz2-dev libbz2-1.0 libghc-bzlib-dev squashfs-tools pngcrush schedtool dpkg-dev liblz4-tool make optipng maven libssl-dev pwgen libswitch-perl policycoreutils minicom libxml-sax-base-perl libxml-simple-perl bc libc6-dev-i386 lib32ncurses5-dev libx11-dev lib32z-dev libgl1-mesa-dev xsltproc unzip device-tree-compiler wget cpio p7zip p7zip-full libtinfo5 sudo python3
+        
+        apt-get install -y python2
+        rm -rf /usr/bin/python
+        ln -s /usr/bin/python2.7 /usr/bin/python
+        
+        curl https://storage.googleapis.com/git-repo-downloads/repo > /usr/local/bin/repo
+        chmod a+x /usr/local/bin/repo
+        
     - name: 🌳 初始化 TWRP 核心源码树
       run: |
         mkdir workspace
