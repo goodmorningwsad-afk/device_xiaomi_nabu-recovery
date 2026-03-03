@@ -1,0 +1,65 @@
+name: Build TWRP for Xiaomi Pad 5 (Nabu)
+
+on:
+  workflow_dispatch:
+
+env:
+  # TWRP 官方核心源码（12.1分支目前完美兼容 A12-A15 的底层解密）
+  MANIFEST_URL: 'https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git'
+  MANIFEST_BRANCH: 'twrp-12.1'
+  
+  # 自动指向你刚 Fork 的设备树仓库和当前分支
+  DEVICE_TREE_URL: ''
+  DEVICE_TREE_BRANCH: '$'
+  
+  # 物理坐标配置
+  DEVICE_PATH: 'device/xiaomi/nabu'
+  DEVICE_NAME: 'nabu'
+  MAKEFILE_NAME: 'twrp_nabu'
+  
+  # Nabu 是 A/B 分区，没有独立 recovery 分区，所以必须打包成 bootimage
+  BUILD_TARGET: 'bootimage'
+
+jobs:
+  build:
+    name: Build TWRP
+    runs-on: ubuntu-20.04
+    permissions:
+      contents: write
+
+    steps:
+    - name:  清理云端服务器空间 (释放 30GB+)
+      uses: rokibhasansagar/slimhub_actions@main
+
+    - name:  配置极客编译环境
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y git-core gnupg flex bison build-essential zip curl zlib1g-dev gcc-multilib g++-multilib libc6-dev-i386 lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z1-dev libgl1-mesa-dev libxml2-utils xsltproc unzip jq bc ccache
+
+    - name:  初始化 TWRP 核心源码树 (拉取几十G源码，请耐心等待)
+      run: |
+        mkdir workspace
+        cd workspace
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
+        repo init --depth=1 -u ${{ env.MANIFEST_URL }} -b ${{ env.MANIFEST_BRANCH }}
+        repo sync -j$(nproc --all) --force-sync
+
+    - name:  注入 Nabu 设备树
+      run: |
+        cd workspace
+        git clone -b ${{ env.DEVICE_TREE_BRANCH }} ${{ env.DEVICE_TREE_URL }} ${{ env.DEVICE_PATH }}
+
+    - name: 🚀 编译！
+      run: |
+        cd workspace
+        source build/envsetup.sh
+        export ALLOW_MISSING_DEPENDENCIES=true
+        lunch ${{ env.MAKEFILE_NAME }}-eng
+        mka ${{ env.BUILD_TARGET }} -j$(nproc --all)
+
+    - name: 📤 提取并上传
+      uses: actions/upload-artifact@v4
+      with:
+        name: TWRP-Recovery-Nabu
+        path: workspace/out/target/product/${{ env.DEVICE_NAME }}/${{ env.BUILD_TARGET }}.img
