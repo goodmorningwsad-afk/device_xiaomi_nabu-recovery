@@ -8,9 +8,9 @@ env:
   MANIFEST_URL: 'https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git'
   MANIFEST_BRANCH: 'twrp-12.1'
   
-  # 自动指向你刚 Fork 的设备树仓库和当前分支
-  DEVICE_TREE_URL: ''
-  DEVICE_TREE_BRANCH: '$'
+  # 自动指向设备树仓库和当前分支
+  DEVICE_TREE_URL: 'https://github.com/goodmorningwsad-afk/device_xiaomi_nabu-recovery'
+  DEVICE_TREE_BRANCH: 'android-12.1'
   
   # 物理坐标配置
   DEVICE_PATH: 'device/xiaomi/nabu'
